@@ -1,6 +1,6 @@
 import pandas as pd
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-from sklearn.feature_extraction.text import CountVectorizer
+import nltk
 import numpy as np
 from pathlib import Path
 import math
@@ -15,20 +15,32 @@ df = pd.read_csv(inputfile, names=["query","diagnosis"], header=0)
 #preprocessing data
 factory = StemmerFactory()
 stemmer = factory.create_stemmer()
+tokenizer = nltk.RegexpTokenizer(r'\w+')
 
 for index, row in df.iterrows():
     #stemming
     stem = stemmer.stem(row[0])
     #case folding
     words = stem.lower()
-    df.at[index, "query"] = words
+    #Tokenize
+    token = tokenizer.tokenize(words)
+    df.at[index, "query"] = token
     
 #Feature Extraction
-vector = CountVectorizer()
-transform = np.array(vector.fit_transform(df['query']).toarray())
-unique_words = len(transform[0])
-for words in range(unique_words):
-    df.insert(2+words, 'word_{}'.format(words+1), transform[:,words])
+columnlist = []
+for index, row in df.iterrows():
+    columnlist = np.concatenate((columnlist, row[0]))
+columnlist = np.unique(columnlist)
+
+for index in range(len(columnlist)):
+    df.insert(2, 'word_{}'.format(index+1), 0)
+
+df.head()
+
+#Hitung jumlah kata yang muncul dalam query gejala
+for index, row in df.iterrows():
+    for column in range(len(columnlist)):
+        df.at[index, columnlist[column]] = row[0].count(str(columnlist[column]))
 
 df.head()
 
@@ -65,4 +77,3 @@ print(test_data.iloc[:, :3])
 
 #output data to csv
 test_data.to_csv('hasil.csv')
-
