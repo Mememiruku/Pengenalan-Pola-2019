@@ -28,6 +28,3 @@ test_data.reset_index(inplace=True, drop=True)
 test_data.head()
 
 
-#Jaro similarity
-def jaro_similarity(s1, s2):
-    
