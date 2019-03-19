@@ -23,6 +23,7 @@ for index, row in df.iterrows():
     #case folding
     words = stem.lower()
     df.at[index, "query"] = words
+
 #Feature Extraction
 vector = CountVectorizer()
 transform = np.array(vector.fit_transform(df['query']).toarray())
@@ -60,7 +61,9 @@ for test_index, test_row in test_data.iterrows():
     test_data.at[test_index, 'distance'] = np.min(distance)
     test_data.at[test_index, 'diagnosis'] = train_data.at[np.argmin(distance), 'diagnosis']
 
+#show test data distance and diagnose
 print(test_data.iloc[:, :3])
 
+#create csv output
 test_data.to_csv('hasil.csv')
 
