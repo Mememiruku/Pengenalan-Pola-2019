@@ -23,7 +23,7 @@ for index, row in df.iterrows():
     #case folding
     words = stem.lower()
     df.at[index, "query"] = words
-
+#Feature Extraction
 vector = CountVectorizer()
 transform = np.array(vector.fit_transform(df['query']).toarray())
 unique_words = len(transform[0])
