@@ -5,7 +5,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 from pathlib import Path
 import math
-from decimal import Decimal
 
 
 #fetch file
@@ -17,7 +16,6 @@ df = pd.read_csv(inputfile, names=["query","diagnosis"], header=0)
 #preprocessing data
 factory = StemmerFactory()
 stemmer = factory.create_stemmer()
-tokenizer = nltk.RegexpTokenizer(r'\w+')
 
 for index, row in df.iterrows():
     #stemming
